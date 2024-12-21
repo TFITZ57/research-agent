@@ -66,8 +66,6 @@ class Router(TypedDict):
 
 
 # This is the primary state of your agent, where you can store any information
-
-
 @dataclass(kw_only=True)
 class AgentState(InputState):
     """State of the retrieval graph / agent."""

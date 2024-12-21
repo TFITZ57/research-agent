@@ -7,11 +7,9 @@ conducting research, and formulating responses.
 """
 
 from typing import Any, Literal, TypedDict, cast
-
 from langchain_core.messages import BaseMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, StateGraph
-
 from retrieval_graph.configuration import AgentConfiguration
 from retrieval_graph.researcher_graph.graph import graph as researcher_graph
 from retrieval_graph.state import AgentState, InputState, Router
@@ -43,18 +41,14 @@ async def analyze_and_route_query(
     )
     return {"router": response}
 
-
 def route_query(
     state: AgentState,
 ) -> Literal["create_research_plan", "ask_for_more_info", "respond_to_general_query"]:
     """Determine the next step based on the query classification.
-
     Args:
         state (AgentState): The current state of the agent, including the router's classification.
-
     Returns:
         Literal["create_research_plan", "ask_for_more_info", "respond_to_general_query"]: The next step to take.
-
     Raises:
         ValueError: If an unknown router type is encountered.
     """
@@ -75,11 +69,9 @@ async def ask_for_more_info(
     """Generate a response asking the user for more information.
 
     This node is called when the router determines that more information is needed from the user.
-
     Args:
         state (AgentState): The current state of the agent, including conversation history and router logic.
         config (RunnableConfig): Configuration with the model used to respond.
-
     Returns:
         dict[str, list[str]]: A dictionary with a 'messages' key containing the generated response.
     """
@@ -99,11 +91,9 @@ async def respond_to_general_query(
     """Generate a response to a general query not related to LangChain.
 
     This node is called when the router classifies the query as a general question.
-
     Args:
         state (AgentState): The current state of the agent, including conversation history and router logic.
         config (RunnableConfig): Configuration with the model used to respond.
-
     Returns:
         dict[str, list[str]]: A dictionary with a 'messages' key containing the generated response.
     """
@@ -121,11 +111,9 @@ async def create_research_plan(
     state: AgentState, *, config: RunnableConfig
 ) -> dict[str, list[str] | str]:
     """Create a step-by-step research plan for answering a LangChain-related query.
-
     Args:
         state (AgentState): The current state of the agent, including conversation history.
         config (RunnableConfig): Configuration with the model used to generate the plan.
-
     Returns:
         dict[str, list[str]]: A dictionary with a 'steps' key containing the list of research steps.
     """
@@ -146,16 +134,12 @@ async def create_research_plan(
 
 async def conduct_research(state: AgentState) -> dict[str, Any]:
     """Execute the first step of the research plan.
-
     This function takes the first step from the research plan and uses it to conduct research.
-
     Args:
         state (AgentState): The current state of the agent, including the research plan steps.
-
     Returns:
         dict[str, list[str]]: A dictionary with 'documents' containing the research results and
                               'steps' containing the remaining research steps.
-
     Behavior:
         - Invokes the researcher_graph with the first step of the research plan.
         - Updates the state with the retrieved documents and removes the completed step.
@@ -170,10 +154,8 @@ def check_finished(state: AgentState) -> Literal["respond", "conduct_research"]:
     This function checks if there are any remaining steps in the research plan:
         - If there are, route back to the `conduct_research` node
         - Otherwise, route to the `respond` node
-
     Args:
         state (AgentState): The current state of the agent, including the remaining research steps.
-
     Returns:
         Literal["respond", "conduct_research"]: The next step to take based on whether research is complete.
     """
@@ -189,11 +171,9 @@ async def respond(
     """Generate a final response to the user's query based on the conducted research.
 
     This function formulates a comprehensive answer using the conversation history and the documents retrieved by the researcher.
-
     Args:
         state (AgentState): The current state of the agent, including retrieved documents and conversation history.
         config (RunnableConfig): Configuration with the model used to respond.
-
     Returns:
         dict[str, list[str]]: A dictionary with a 'messages' key containing the generated response.
     """

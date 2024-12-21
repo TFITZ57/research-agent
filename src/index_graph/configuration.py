@@ -11,7 +11,6 @@ from shared.configuration import BaseConfiguration
 # - https://langchain-ai.github.io/langgraph/concepts/low_level/
 DEFAULT_DOCS_FILE = "src/sample_docs.json"
 
-
 @dataclass(kw_only=True)
 class IndexConfiguration(BaseConfiguration):
     """Configuration class for indexing and retrieval operations.
